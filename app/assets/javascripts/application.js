@@ -7,3 +7,27 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+$(document).ready(function(){
+	$("#searchBox").keyup(function(){
+		performSearch(this.value);
+	});
+});
+
+function performSearch(text){
+	if(performSearch.timeoutlId)
+		clearTimeout(performSearch.timeoutlId);
+	performSearch.timeoutlId = setTimeout(function(){
+		console.error("performing search for", text);
+		$.get("/search", function(response){
+			console.error("received reposnse ", response);
+		});
+	}, 300);
+}
+
+function render(results){
+	
+}
+performSearch.timeoutId = undefined;
+
+
