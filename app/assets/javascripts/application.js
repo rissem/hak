@@ -19,15 +19,29 @@ function performSearch(text){
 		clearTimeout(performSearch.timeoutlId);
 	performSearch.timeoutlId = setTimeout(function(){
 		console.error("performing search for", text);
-		$.get("/search", function(response){
-			console.error("received reposnse ", response);
+		$.get("/search", {text: text}, function(response){
+			console.error("received response", response);
+			render(response);
 		});
 	}, 300);
-}
-
-function render(results){
-	
 }
 performSearch.timeoutId = undefined;
 
 
+function open(file, line){
+	$.get("/open", {file: file, line: line}, function(){
+		console.error("W00T!");
+	});
+}
+
+function render(results){
+	$("#results").html("");
+	for (var key in results){
+		$("#results").append(Mustache.render($("#code_snippet").html(), {lines: results[key], filename: key}));
+	}
+	prettyPrint();
+	$(".openEditor").click(function(){
+		open($(this).attr("filename"), $(this).attr("line_num"));
+		return false;
+	});
+}

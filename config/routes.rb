@@ -1,6 +1,7 @@
 Hak::Application.routes.draw do
   match 'find' => 'finder#index'
   match 'search' => 'finder#search'
+  match 'open' => 'finder#open'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

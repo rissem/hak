@@ -1,1 +1,24 @@
-<input type="text" id="searchBox"/>
+<br /><br />
+<div>
+<center><input type="text" id="searchBox" style="margin:auto; padding-top:10px; width: 350px;"/></center>
+</div>
+<br /><br /><br />
+
+<div id="results" style="padding-left: 20px;">
+</div>
+
+<script id="code_snippet" type="text/mustache">
+  <div style="width:500px; float:left">
+  <h5 class="header" style="padding-bottom:8px">{{filename}}</h2>
+  <ul class="listing">
+  {{#lines}}
+  <li>
+	<a href="#" class="openEditor" filename="{{filename}}" line_num="{{line_num}}">
+	  <code class="prettyprint line">{{{line}}}</code>
+	</a>
+  </li>
+  {{/lines}}
+  <br /><br /><br />
+  </ul>
+  </div>
+</script>
