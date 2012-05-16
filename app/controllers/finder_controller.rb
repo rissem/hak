@@ -4,9 +4,14 @@ class FinderController < ApplicationController
 
   def search
     response = {}
-    results = `find /Users/mike/web_frontend -name "*rb" | xargs grep -niC5 #{params[:text]}`
+    
+    extensions = FILE_EXTENSIONS.split(",")
+    find_command = "find #{PROJECT_DIRECTORY} -name \"*#{extensions[0]}\""
+    extensions.slice(1..-1).each {|extension| find_command += " -or -name \"*#{extension}\""}
+    find_command += " | xargs grep -niC5 #{params[:text]}"
+    results = `#{find_command}`
 
-    results.split("\n").slice(0..300).each do |line|
+    results.split("\n").slice(0..500).each do |line|
       matches = /(.*?)[-:](\d+)[-:]\s+(.*)/.match(line)
       if not matches
         next
@@ -25,8 +30,13 @@ class FinderController < ApplicationController
   end
 
   def open
-    `/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n +#{params[:line]} #{params[:file]}`
-    Rails.logger.info("opening file in emacs #{params}")
+    if /mate$/.match(EDITOR)
+      `#{EDITOR} -l #{params[:line]} #{params[:file]}`
+      Rails.logger.info("opening file in textmate")
+    elsif /emacsclient$/.match(EDITOR)
+      `#{EDITOR} -n +#{params[:line]} #{params[:file]}`
+      Rails.logger.info("opening file in emacs #{params}")
+    end
 	render :json => {}
   end
 end
